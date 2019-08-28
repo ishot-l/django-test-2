@@ -19,11 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'o&kav84l%n6%tqi_s8=z_u-cs=f*ihz2#zng&q(9r7$$o$$nb^'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -72,14 +68,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# local_settings.py に移行
 
 
 # Password validation
@@ -120,3 +109,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+# テスト環境ならば local_settings.pyを読み込む
+try:
+    from .local_settings import *
+except ImportError:
+    pass
+
+# 本番環境の場合
+if not DEBUG:
+    SECURITY_KEY = os.environ['SECURITY_KEY'] # 環境変数に設定してあるSECURITY_KEYを利用
+    import django_heroku
+    django_heroku.settings(locals())
