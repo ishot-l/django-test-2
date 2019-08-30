@@ -122,3 +122,5 @@ if not DEBUG:
     SECRET_KEY = os.environ['SECRET_KEY'] # 環境変数に設定してあるSECRET_KEYを利用
     import django_heroku
     django_heroku.settings(locals())
+
+LOGIN_REDIRECT_URL = '/'
